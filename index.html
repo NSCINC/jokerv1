@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="logo.png" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🃏 Joker 🃏</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #000; /* Preto */
+            color: #00FF00; /* Verde */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: #111; /* Preto mais claro */
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(128, 0, 128, 0.3); /* Roxo */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #800080; /* Roxo */
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            border-radius: 5px;
+            border: 1px solid #800080; /* Roxo */
+            padding: 10px;
+            font-family: monospace;
+            font-size: 1em;
+            resize: vertical;
+            background-color: #222; /* Preto mais claro */
+            color: #00FF00; /* Verde */
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        textarea::placeholder {
+            color: #00FF00; /* Verde */
+        }
+        textarea:focus {
+            border-color: #800080; /* Roxo */
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #800080; /* Roxo */
+            background-color: #222; /* Preto mais claro */
+            color: #00FF00; /* Verde */
+            font-size: 1em;
+            outline: none;
+        }
+        button {
+            background-color: #00FF00; /* Verde */
+            color: #000; /* Preto */
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        button:hover {
+            background-color: #800080; /* Roxo */
+            color: #000; /* Preto */
+        }
+        button:active {
+            background-color: #00CC00; /* Verde mais claro */
+            color: #000; /* Preto */
+        }
+        .output {
+            background: #222; /* Preto mais claro */
+            padding: 15px;
+            border-radius: 5px;
+            color: #00FF00; /* Verde */
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .error-message {
+            color: #FF3333; /* Vermelho */
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #800080; /* Roxo */
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            textarea {
+                font-size: 0.9em;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="logo.jpg" alt="Logo" class="logo">
+        <h1>🌌🚀 Joker 🚀🌌</h1>
+        <select id="languageSelector">
+            <option value="solidity">Solidity</option>
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="ruby">Ruby</option>
+        </select>
+        <textarea id="inputCode" placeholder='// Insert code here'></textarea>
+        <button onclick="convertCode()">Convert</button>
+        <div class="output" id="outputCode"></div>
+        <div class="error-message" id="errorMessage"></div>
+        <div class="footer">
+            Rights reserved to NSC INC
+        </div>
+    </div>
+
+    <script>
+        async function convertCode() {
+            const inputCode = document.getElementById('inputCode').value;
+            const selectedLanguage = document.getElementById('languageSelector').value;
+
+            if (!inputCode.trim()) {
+                displayErrorMessage('Please insert code before converting.');
+                return;
+            }
+
+            const button = document.querySelector('button');
+            button.textContent = 'Converting...';
+            button.disabled = true;
+
+            try {
+                const convertedCode = await convertToLua(selectedLanguage, inputCode);
+                document.getElementById('outputCode').innerHTML = convertedCode;
+                clearErrorMessage();
+            } catch (error) {
+                console.error('Error converting code:', error);
+                displayErrorMessage('An error occurred while processing the code.');
+            } finally {
+                button.textContent = 'Convert';
+                button.disabled = false;
+            }
+        }
+
+        async function convertToLua(language, code) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    let luaCode;
+                    switch (language) {
+                        case 'solidity':
+                            luaCode = convertSolidityToLua(code);
+                            break;
+                        case 'javascript':
+                            luaCode = convertJavaScriptToLua(code);
+                            break;
+                        case 'python':
+                            luaCode = convertPythonToLua(code);
+                            break;
+                        case 'ruby':
+                            luaCode = convertRubyToLua(code);
+                            break;
+                        default:
+                            luaCode = '-- Unsupported language';
+                    }
+
+                    // Implement SEA Learning Multi Scalae processing
+                    luaCode = seaLearningProcessing(luaCode);
+
+                    resolve(luaCode);
+                }, 1000);
+            });
+        }
+
+        function convertSolidityToLua(code) {
+            return code
+                .replace(/pragma solidity \^\d+\.\d+\.\d+;/g, '-- Solidity Version')
+                .replace(/contract (\w+)/g, 'function $1()')
+                .replace(/{/g, 'do')
+                .replace(/}/g, 'end')
+                .replace(/uint/g, 'number')
+                .replace(/string/g, 'string')
+                .replace(/public/g, '-- public')
+                .replace(/function/g, 'local function')
+                .replace(/returns \((.*)\)/g, '-- returns $1')
+                .replace(/;/g, '');
+        }
+
+        function convertJavaScriptToLua(code) {
+            return code
+                .replace(/function/g, 'local function')
+                .replace(/var /g, 'local ')
+                .replace(/let /g, 'local ')
+                .replace(/const /g, 'local ')
+                .replace(/console\.log/g, 'print')
+                .replace(/{/g, 'do')
+                .replace(/}/g, 'end')
+                .replace(/;/g, '');
+        }
+
+        function convertPythonToLua(code) {
+            return code
+                .replace(/def /g, 'local function ')
+                .replace(/:/g, ' do')
+                .replace(/return/g, 'return')
+                .replace(/None/g, 'nil')
+                .replace(/True/g, 'true')
+                .replace(/False/g, 'false')
+                .replace(/# /g, '-- ');
+        }
+
+        function convertRubyToLua(code) {
+            return code
+                .replace(/def /g, 'local function ')
+                .replace(/end/g, 'end')
+                .replace(/puts /g, 'print ')
+                .replace(/:/g, ' do')
+                .replace(/nil/g, 'nil')
+                .replace(/true/g, 'true')
+                .replace(/false/g, 'false')
+                .replace(/# /g, '-- ');
+        }
+
+        function seaLearningProcessing(code) {
+            // Implement SEA Learning Multi Scalae logic here
+            // Example: Add comments to the code
+            code = code.replace(/local function (\w+)/g, '-- SEA Learning: Function $1\nlocal function $1');
+            return code;
+        }
+
+        function displayErrorMessage(message) {
+            document.getElementById('errorMessage').textContent = message;
+        }
+
+        function clearErrorMessage() {
+            document.getElementById('errorMessage').textContent = '';
+        }
+    </script>
+</body>
+</
